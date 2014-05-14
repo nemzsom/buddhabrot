@@ -1,0 +1,2 @@
+Buddhabrot calculator
+---------------------
