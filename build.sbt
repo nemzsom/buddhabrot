@@ -4,8 +4,11 @@ version := "0.1"
 
 scalaVersion := "2.11.0"
 
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+resolvers += "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.1.6" % "test"
-
-libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.2"
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" % "akka-actor_2.11" % "2.3.2",
+  "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2",
+  "org.scalatest" % "scalatest_2.11" % "2.1.6" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.11.4" % "test"
+)

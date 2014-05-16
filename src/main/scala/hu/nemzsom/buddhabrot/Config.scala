@@ -1,15 +1,19 @@
 package hu.nemzsom.buddhabrot
 
-case class Config(width: Int, height: Int, reFrom: Double, reTo: Double, imFrom: Double) {
+case class Config(width: Int, height: Int, imFrom: Double, imTo: Double, reFrom: Double) {
 
-  val imTo = (reTo - reFrom) * width / height + imFrom
+  val reTo = (imTo - imFrom) * height / width + reFrom
 
 }
 
-case object DefaultConfig extends Config(
-  width = 480,
-  height = 640,
-  reFrom = -2.0,
-  reTo = 2.0,
-  imFrom = 2.0
-)
+object Config {
+
+  val default = Config(
+    width = 480,
+    height = 640,
+    imFrom = -2.0,
+    imTo = 2.0,
+    reFrom = -2.0
+  )
+
+}
