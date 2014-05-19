@@ -24,14 +24,17 @@ class BuddhaCalcSpec extends FlatSpec with GeneratorDrivenPropertyChecks with Ma
   }
 
   "BuddhaCalc" should "produce iteration sequences" in {
+    val maxIter = 10
     val calc = new TestCalc(-2.0, 2.0, -2.0, 2.0)
-    val sequences: IndexedSeq[IterationSeq] = 1 to 100 map (_ => {println(calc.seq(10)); calc.seq(10)})
+    val sequences: IndexedSeq[IterationSeq] = 1 to 100 map (_ => calc.seq(maxIter))
     // there should be Escaped as well as Stayed points
     Set(classOf[Escaped], classOf[Stayed]) forall { cl =>
       sequences exists (cl.isInstance(_))
     } shouldBe true
     // there should be at least 5 sequence with different size
     (sequences map (_.seq.size)).distinct.length should be > 5
+    // there should be no sequence that size's greater than maxIter
+    sequences foreach (_.seq.size should be <= maxIter)
   }
 
 

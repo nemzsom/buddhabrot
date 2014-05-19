@@ -41,19 +41,20 @@ trait BuddhaCalc {
   protected def nextSeq(maxIter: Int): IterationSeq = {
     val c = nextComplex
     if (c.isInside) {
+      // no need to iterate
       Stayed(Seq(c))
     }
     else {
-      @tailrec def loop(iter: Int, z: Complex, seq: List[Complex]): (Seq[Complex], Boolean) = {
+      @tailrec def iterate(iter: Int, z: Complex, seq: List[Complex]): (Seq[Complex], Boolean) = {
         val escaped = z.escaped
         if (iter >= maxIter || escaped)
           (seq, escaped)
         else {
           val nextZ = z * z + c
-          loop(iter + 1, nextZ, nextZ :: seq)
+          iterate(iter + 1, nextZ, nextZ :: seq)
         }
       }
-      val (seq, escaped) = loop(0, Complex.ZERO, List())
+      val (seq, escaped) = iterate(0, Complex.ZERO, List())
       if (escaped) Escaped(seq)
       else Stayed(seq)
     }
@@ -64,8 +65,6 @@ trait BuddhaCalc {
 }
 
 object BuddhaCalc {
-
-
 
   implicit class ComplexOps(c: Complex) {
 
