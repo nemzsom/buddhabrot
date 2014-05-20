@@ -1,6 +1,6 @@
 package hu.nemzsom.buddhabrot
 
-class Grid(width: Int, height: Int, reFrom: Double, reTo: Double, imFrom: Double, imTo: Double) extends Iterable[Int] {
+class Grid(val width: Int, val height: Int, val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) extends Iterable[Int] {
 
   require(width > 0)
   require(height > 0)
@@ -14,7 +14,7 @@ class Grid(width: Int, height: Int, reFrom: Double, reTo: Double, imFrom: Double
 
   private val data = new Array[Int](size)
 
-  override def iterator = data.iterator
+  override def iterator: Iterator[Int] = data.iterator
 
   private def indexFor(x: Int, y: Int) = y * width + x
 

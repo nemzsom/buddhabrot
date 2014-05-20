@@ -52,7 +52,7 @@ class BuddhaCalcSpec extends FlatSpec with GeneratorDrivenPropertyChecks with Ma
   )
 }
 
-class TestCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) extends BuddhaCalc {
+class TestCalc(reFrom: Double, reTo: Double, imFrom: Double, imTo: Double) extends BuddhaCalc(reFrom, reTo, imFrom, imTo) {
 
   def next = nextComplex
 

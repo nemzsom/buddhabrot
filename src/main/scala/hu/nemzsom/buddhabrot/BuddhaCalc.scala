@@ -10,14 +10,9 @@ sealed trait IterationSeq {
 case class Escaped(seq: Seq[Complex]) extends IterationSeq
 case class Stayed(seq: Seq[Complex]) extends IterationSeq
 
-trait BuddhaCalc {
+class BuddhaCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) {
 
   import BuddhaCalc._
-
-  val reFrom: Double
-  val reTo:   Double
-  val imFrom: Double
-  val imTo:   Double
 
   require(reFrom < reTo)
   require(imFrom < imTo)
@@ -38,7 +33,7 @@ trait BuddhaCalc {
     Complex(re, im)
   }
 
-  protected def nextSeq(maxIter: Int): IterationSeq = {
+  def nextSeq(maxIter: Int): IterationSeq = {
     val c = nextComplex
     if (c.isInside) {
       // no need to iterate

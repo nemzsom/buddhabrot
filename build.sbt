@@ -7,6 +7,7 @@ scalaVersion := "2.11.0"
 resolvers += "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
 
 libraryDependencies ++= Seq(
+  "org.scala-lang" % "scala-swing" % "2.11.0-M7",
   "com.typesafe.akka" % "akka-actor_2.11" % "2.3.2",
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2",
   "org.scalatest" % "scalatest_2.11" % "2.1.6" % "test",

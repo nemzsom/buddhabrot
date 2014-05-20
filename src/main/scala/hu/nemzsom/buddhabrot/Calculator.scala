@@ -2,19 +2,23 @@ package hu.nemzsom.buddhabrot
 
 import akka.actor.{ActorLogging, Actor}
 import scala.util.Random
+import scala.annotation.tailrec
 
 case object Calculate
+case class Path(seq: Seq[Complex])
 
-class Calculator extends Actor with BuddhaCalc with ActorLogging {
+class Calculator(config: Config) extends Actor with ActorLogging {
+
+  val calc = new BuddhaCalc(config.reFrom, config.reTo, config.imFrom, config.imTo)
 
   override def receive = {
-    case Calculate =>
+    case Calculate => sender ! Path(nextEscaped)
   }
 
-  import Main.config
-
-  override val reFrom: Double = config.reFrom
-  override val imFrom: Double = config.reTo
-  override val imTo:   Double = config.imFrom
-  override val reTo:   Double = config.imTo
+  @tailrec
+  private def nextEscaped: Seq[Complex]=
+    calc.nextSeq(200) match {
+      case Escaped(seq) => seq
+      case Stayed(_) => nextEscaped
+    }
 }
