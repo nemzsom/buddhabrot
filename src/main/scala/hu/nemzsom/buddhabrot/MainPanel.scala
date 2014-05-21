@@ -6,8 +6,9 @@ import java.awt.image.{DataBufferInt, BufferedImage}
 import java.awt.Graphics2D
 import scala.swing.BorderPanel.Position
 import javax.swing.BorderFactory
+import scala.swing.event._
 
-class ImagePanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
+class MainPanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
 
   preferredSize = (initialWidth, initialHeight)
   focusable = true

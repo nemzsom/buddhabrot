@@ -1,6 +1,6 @@
 package hu.nemzsom.buddhabrot
 
-case class Config(width: Int, height: Int, imFrom: Double, imTo: Double, reFrom: Double) {
+case class Config(width: Int, height: Int, imFrom: Double, imTo: Double, reFrom: Double, maxIter: Int) {
 
   val reTo = (imTo - imFrom) * height / width + reFrom
 
@@ -9,11 +9,12 @@ case class Config(width: Int, height: Int, imFrom: Double, imTo: Double, reFrom:
 object Config {
 
   val default = Config(
-    width = 480,
-    height = 640,
+    width = 1024,
+    height = 760,
     imFrom = -2.0,
     imTo = 2.0,
-    reFrom = -2.0
+    reFrom = -2.0,
+    maxIter = 20000
   )
 
 }

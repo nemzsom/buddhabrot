@@ -17,7 +17,7 @@ class Calculator(config: Config) extends Actor with ActorLogging {
 
   @tailrec
   private def nextEscaped: Seq[Complex]=
-    calc.nextSeq(200) match {
+    calc.nextSeq(config.maxIter) match {
       case Escaped(seq) => seq
       case Stayed(_) => nextEscaped
     }
