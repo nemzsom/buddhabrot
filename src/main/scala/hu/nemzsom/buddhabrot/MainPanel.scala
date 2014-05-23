@@ -24,6 +24,9 @@ class MainPanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
     databuffer.getData
   }
 
+  def updateMessage(msgStr: String): Unit =
+    msg.text = msgStr
+
   override def paintComponent(g: Graphics2D) = {
     super.paintComponent(g)
     g.drawImage(img, 0, 0, img.getWidth, img.getHeight, null)

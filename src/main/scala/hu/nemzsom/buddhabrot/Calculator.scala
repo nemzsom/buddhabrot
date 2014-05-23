@@ -5,20 +5,22 @@ import scala.util.Random
 import scala.annotation.tailrec
 
 case object Calculate
-case class Path(seq: Seq[Complex])
+case class Path(seq: Seq[Complex], iter: Int)
 
 class Calculator(config: Config) extends Actor with ActorLogging {
 
   val calc = new BuddhaCalc(config.reFrom, config.reTo, config.imFrom, config.imTo)
 
   override def receive = {
-    case Calculate => sender ! Path(nextEscaped)
+    case Calculate =>
+      val iterSeq = nextEscaped
+      sender ! Path(iterSeq.seq, iterSeq.iter)
   }
 
   @tailrec
-  private def nextEscaped: Seq[Complex]=
-    calc.nextSeq(config.maxIter) match {
-      case Escaped(seq) => seq
-      case Stayed(_) => nextEscaped
-    }
+  private def nextEscaped: IterationSeq = {
+    val seq = calc.nextSeq(config.maxIter)
+    if (seq.escaped) seq
+    else nextEscaped
+  }
 }

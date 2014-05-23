@@ -4,11 +4,7 @@ import scala.util.Random
 import scala.math._
 import scala.annotation.tailrec
 
-sealed trait IterationSeq {
-  val seq: Seq[Complex]
-}
-case class Escaped(seq: Seq[Complex]) extends IterationSeq
-case class Stayed(seq: Seq[Complex]) extends IterationSeq
+case class IterationSeq(seq: Seq[Complex], iter: Int, escaped: Boolean)
 
 class BuddhaCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) {
 
@@ -37,21 +33,19 @@ class BuddhaCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val i
     val c = nextComplex
     if (c.isInside) {
       // no need to iterate
-      Stayed(Seq(c))
+      IterationSeq(Seq(c), 1, escaped = false)
     }
     else {
-      @tailrec def iterate(iter: Int, z: Complex, seq: List[Complex]): (Seq[Complex], Boolean) = {
+      @tailrec def iterate(iter: Int, z: Complex, seq: List[Complex]): IterationSeq = {
         val escaped = z.escaped
         if (iter >= maxIter || escaped)
-          (seq, escaped)
+          IterationSeq(seq, iter, escaped)
         else {
           val nextZ = z * z + c
           iterate(iter + 1, nextZ, nextZ :: seq)
         }
       }
-      val (seq, escaped) = iterate(0, Complex.ZERO, List())
-      if (escaped) Escaped(seq)
-      else Stayed(seq)
+      iterate(0, Complex.ZERO, List())
     }
   }
 

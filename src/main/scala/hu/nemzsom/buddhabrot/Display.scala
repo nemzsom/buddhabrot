@@ -2,16 +2,17 @@ package hu.nemzsom.buddhabrot
 
 import akka.actor.Actor
 
-case class Update(data: Iterable[Int])
+case class UpdatePixels(data: Iterable[Int])
+case class UpdateMessage(msg: String)
 
 class Display(panel: MainPanel) extends Actor {
 
   val scale = Display.scale(0, 255)_
   var min = 0
-  var max = 255
+  var max = 0
   
   override def receive = {
-    case Update(data) =>
+    case UpdatePixels(data) =>
       val pixels = panel.data
       val actScale = scale(min, max)(_)
       min = Integer.MAX_VALUE
@@ -22,6 +23,8 @@ class Display(panel: MainPanel) extends Actor {
         pixels(i) = n | n << 8 | n << 16
       }
       panel.repaint()
+    case UpdateMessage(msg) =>
+      panel.updateMessage(msg)
   }
 }
 

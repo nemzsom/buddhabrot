@@ -10,11 +10,10 @@ object Config {
 
   val default = Config(
     width = 1024,
-    height = 760,
+    height = 768,
     imFrom = -2.0,
     imTo = 2.0,
     reFrom = -2.0,
-    maxIter = 20000
+    maxIter = 200
   )
-
 }
