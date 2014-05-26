@@ -33,7 +33,7 @@ class BuddhaCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val i
     val c = nextComplex
     if (c.isInside) {
       // no need to iterate
-      IterationSeq(Seq(c), 1, escaped = false)
+      IterationSeq(Seq(), 0, escaped = false)
     }
     else {
       @tailrec def iterate(iter: Int, z: Complex, seq: List[Complex]): IterationSeq = {
@@ -45,7 +45,7 @@ class BuddhaCalc(val reFrom: Double, val reTo: Double, val imFrom: Double, val i
           iterate(iter + 1, nextZ, nextZ :: seq)
         }
       }
-      iterate(0, Complex.ZERO, List())
+      iterate(0, c, List())
     }
   }
 

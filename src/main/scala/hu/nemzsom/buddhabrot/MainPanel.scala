@@ -10,7 +10,7 @@ import scala.swing.event._
 
 class MainPanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
 
-  preferredSize = (initialWidth, initialHeight)
+  preferredSize = (640, 480)
   focusable = true
   val msg = new Label("", EmptyIcon, Alignment.Left)
   msg.peer.setBorder(BorderFactory.createEmptyBorder(0, 5, 2, 0))
@@ -29,6 +29,7 @@ class MainPanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
 
   override def paintComponent(g: Graphics2D) = {
     super.paintComponent(g)
-    g.drawImage(img, 0, 0, img.getWidth, img.getHeight, null)
+    val size: Dimension = peer.getSize
+    g.drawImage(img, 0, 0, size.width, size.height, null)
   }
 }

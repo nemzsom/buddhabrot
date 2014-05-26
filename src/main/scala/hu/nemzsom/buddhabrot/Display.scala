@@ -1,9 +1,11 @@
 package hu.nemzsom.buddhabrot
 
 import akka.actor.Actor
+import hu.nemzsom.buddhabrot.Main._
 
 case class UpdatePixels(data: Iterable[Int])
 case class UpdateMessage(msg: String)
+case object SaveImg
 
 class Display(panel: MainPanel) extends Actor {
 
@@ -25,6 +27,10 @@ class Display(panel: MainPanel) extends Actor {
       panel.repaint()
     case UpdateMessage(msg) =>
       panel.updateMessage(msg)
+    case SaveImg =>
+      panel.updateMessage("Saving image...")
+      val savedImg = new ImageSaver(config.outDir).saveImage(panel.img)
+      panel.updateMessage(s"Image saved to $savedImg.")
   }
 }
 

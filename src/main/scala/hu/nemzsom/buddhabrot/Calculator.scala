@@ -4,23 +4,32 @@ import akka.actor.{ActorLogging, Actor}
 import scala.util.Random
 import scala.annotation.tailrec
 
-case object Calculate
-case class Path(seq: Seq[Complex], iter: Int)
+case class Calculate(iterations: Int)
+case class Tracks(points: Seq[Complex], sample: Int, allIter: Int)
 
 class Calculator(config: Config) extends Actor with ActorLogging {
 
   val calc = new BuddhaCalc(config.reFrom, config.reTo, config.imFrom, config.imTo)
 
   override def receive = {
-    case Calculate =>
-      val iterSeq = nextEscaped
-      sender ! Path(iterSeq.seq, iterSeq.iter)
+    case Calculate(iterations) =>
+      sender ! calculate(iterations)
   }
 
-  @tailrec
-  private def nextEscaped: IterationSeq = {
-    val seq = calc.nextSeq(config.maxIter)
-    if (seq.escaped) seq
-    else nextEscaped
+  private def calculate(iterations: Int): Tracks = {
+    @tailrec
+    def iterate(points: Seq[Complex], sample: Int, allIter: Int): Tracks = {
+      if (allIter >= iterations) Tracks(points, sample, allIter)
+      else {
+        val nextSeq = calc.nextSeq(config.maxIter)
+        val nextIter = allIter + nextSeq.iter
+        val nextPoints = {
+          if (nextSeq.escaped) nextSeq.seq ++ points
+          else points
+        }
+        iterate(nextPoints, sample + 1, nextIter)
+      }
+    }
+    iterate(List(), 0, 0)
   }
 }

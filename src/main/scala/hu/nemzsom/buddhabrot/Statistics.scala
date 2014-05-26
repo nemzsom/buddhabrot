@@ -2,18 +2,18 @@ package hu.nemzsom.buddhabrot
 
 class Statistics(val ticksPerStat: Int) {
 
-  var pathCount = 0
+  var sampleCount = 0
 
-  private val iterCounts = new Array[Int](ticksPerStat)
+  private val iterCounts = new Array[Long](ticksPerStat)
   private var allTicks = 0
   private var actIndex = 0
 
-  def iters(count: Int): Unit = {
+  def iters(count: Long): Unit = {
     val old = iterCounts(actIndex)
     iterCounts(actIndex) = old + count
   }
 
-  def tick(): Int = {
+  def tick(): Long = {
     allTicks = allTicks + 1
     actIndex = allTicks % ticksPerStat
     val sum = {
