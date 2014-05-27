@@ -3,33 +3,30 @@ package hu.nemzsom.buddhabrot
 import scala.swing.Swing._
 import scala.swing._
 import java.awt.image.{DataBufferInt, BufferedImage}
-import java.awt.Graphics2D
+import java.awt.{Color, Graphics2D}
 import scala.swing.BorderPanel.Position
 import javax.swing.BorderFactory
 import scala.swing.event._
 
-class MainPanel(initialWidth: Int, initialHeight: Int) extends BorderPanel {
+class MainPanel extends BorderPanel {
 
+  private var _img: BufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
+  // TODO scale from config
   preferredSize = (640, 480)
   focusable = true
   val msg = new Label("", EmptyIcon, Alignment.Left)
   msg.peer.setBorder(BorderFactory.createEmptyBorder(0, 5, 2, 0))
   layout(msg) = Position.South
+  peer.setBackground(Color.GRAY)
 
-  val img = new BufferedImage(initialWidth, initialHeight, BufferedImage.TYPE_INT_RGB)
-
-  def data: Array[Int] = {
-    val raster = img.getRaster
-    val databuffer: DataBufferInt = raster.getDataBuffer.asInstanceOf[DataBufferInt]
-    databuffer.getData
-  }
+  def updateImage(img: BufferedImage): Unit =
+    _img = img
 
   def updateMessage(msgStr: String): Unit =
     msg.text = msgStr
 
   override def paintComponent(g: Graphics2D) = {
     super.paintComponent(g)
-    val size: Dimension = peer.getSize
-    g.drawImage(img, 0, 0, size.width, size.height, null)
+    g.drawImage(_img, 0, 0, _img.getWidth, _img.getHeight, null)
   }
 }

@@ -1,14 +1,11 @@
 package hu.nemzsom.buddhabrot
 
 import org.scalatest.{FlatSpec, Matchers}
-import hu.nemzsom.buddhabrot.Display._
 
-class DisplaySpec extends FlatSpec with Matchers {
+class ScaleSpec extends FlatSpec with Matchers {
 
-  import Display._
-
-  "Scale function" should "scale to range [0..10]" in {
-    val sc = scale(0, 10)(0, 100)(_)
+  "Linear scale" should "scale to range [0..10]" in {
+    val sc = Scale.linear(0, 10)(0, 100)(_)
     sc(0) shouldBe 0
     sc(100) shouldBe 10
     sc(40) shouldBe 4
@@ -17,7 +14,7 @@ class DisplaySpec extends FlatSpec with Matchers {
   }
 
   it should "scale to range [100..200]" in {
-    val sc = scale(100, 200)(0, 1000)(_)
+    val sc = Scale.linear(100, 200)(0, 1000)(_)
     sc(0) shouldBe 100
     sc(1000) shouldBe 200
     sc(100) shouldBe 110
@@ -27,12 +24,12 @@ class DisplaySpec extends FlatSpec with Matchers {
   }
 
   it should "scale to zero if max is zero" in {
-    val sc = scale(0, 255)(0, 0)(_)
+    val sc = Scale.linear(0, 255)(0, 0)(_)
     sc(0) shouldBe 0
   }
 
   it should "scale to boundary if x out of bounds" in {
-    val sc = scale(0, 255)(300, 1000)(_)
+    val sc = Scale.linear(0, 255)(300, 1000)(_)
     sc(0) shouldBe 0
     sc(200) shouldBe 0
     sc(300) shouldBe 0

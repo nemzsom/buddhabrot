@@ -2,12 +2,10 @@ package hu.nemzsom.buddhabrot
 
 import akka.actor.{Props, ActorLogging, ActorRef, Actor}
 import scala.concurrent.duration._
-import com.typesafe.scalalogging.slf4j.StrictLogging
-import scala.swing.Image
 
 case object Tick
 
-class Controller(display: ActorRef) extends Actor with StrictLogging {
+class Controller(display: ActorRef) extends Actor with ActorLogging {
 
   import Main.config
   val calcCommand = Calculate(100000)
@@ -18,8 +16,8 @@ class Controller(display: ActorRef) extends Actor with StrictLogging {
   val calcs = startCalcs(Runtime.getRuntime.availableProcessors())
 
   import context._
-  context.system.scheduler.schedule(100 millis, 100 millis, display, UpdatePixels(grid))
   val ticker = context.system.scheduler.schedule(1000 millis, 1000 millis, self, Tick)
+  var nextPreview = 5
 
   override def receive = {
     case Tracks(seq, sample, iter) =>
@@ -34,12 +32,22 @@ class Controller(display: ActorRef) extends Actor with StrictLogging {
       }
     case Tick =>
       val iteration = stats.tick()
-      display ! UpdateMessage(s"samples: ${"%.2f" format (stats.sampleCount * 100.0 / config.samples)}% speed: ${iteration / 1000 / stats.ticksPerStat}K iteration/sec")
+      val percent = stats.sampleCount * 100.0 / config.samples
+      if (percent > nextPreview) {
+        nextPreview = nextPreview + 5
+        display ! Preview(grid)
+      }
+      display ! UpdateMessage(s"samples: ${"%.2f" format percent}% speed: ${iteration / 1000 / stats.ticksPerStat}K iteration/sec")
   }
 
   def toEnd(remained: Set[ActorRef]): Receive =
     if (remained.isEmpty) {
-      display ! SaveImg
+      display ! UpdateMessage("Saving image...")
+      val time = System.nanoTime
+      val img = ImageBuilder.build(grid)
+      log.debug(s"Image save time: ${"%.2f" format ((System.nanoTime() - time) / 1E6)} ms")
+      val savedImg = new ImageSaver(config.outDir).saveImage(img)
+      display ! UpdateMessage(s"Image saved to $savedImg.")
       end
     }
     else waitForEnd(remained)
@@ -51,7 +59,7 @@ class Controller(display: ActorRef) extends Actor with StrictLogging {
   }
 
   def end: Receive = {
-    case msg => logger.error(s"message at end: $msg")
+    case msg => log.error(s"message at end: $msg")
   }
 
   def handleTracks(points: Seq[Complex], sample: Int, iter: Int): Unit = {
@@ -65,6 +73,7 @@ class Controller(display: ActorRef) extends Actor with StrictLogging {
       context.actorOf(Props(classOf[Calculator], config))
     }
     calcs.foreach(_ ! calcCommand)
+    log.info(s"$n concurrent calculators started")
     calcs.toSet
   }
 }
