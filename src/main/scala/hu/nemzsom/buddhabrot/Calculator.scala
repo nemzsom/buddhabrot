@@ -21,7 +21,7 @@ class Calculator(config: Config) extends Actor with ActorLogging {
     def iterate(points: Seq[Complex], sample: Int, allIter: Int): Tracks = {
       if (allIter >= iterations) Tracks(points, sample, allIter)
       else {
-        val nextSeq = calc.nextSeq(config.maxIter)
+        val nextSeq = calc.nextSeq(200) //TODO val nextSeq = calc.nextSeq(config.maxIter)
         val nextIter = allIter + nextSeq.iter
         val nextPoints = {
           if (nextSeq.escaped) nextSeq.seq ++ points

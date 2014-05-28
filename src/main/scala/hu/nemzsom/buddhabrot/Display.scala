@@ -6,7 +6,7 @@ import java.awt.Dimension
 case class Preview(grid: Grid)
 case class UpdateMessage(msg: String)
 
-class Display(panel: MainPanel) extends Actor with ActorLogging {
+class Display(panel: Panel) extends Actor with ActorLogging {
 
   override def receive = {
     case Preview(grid) =>

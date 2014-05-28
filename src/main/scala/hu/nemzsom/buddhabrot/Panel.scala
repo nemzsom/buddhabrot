@@ -8,7 +8,7 @@ import scala.swing.BorderPanel.Position
 import javax.swing.BorderFactory
 import scala.swing.event._
 
-class MainPanel extends BorderPanel {
+class Panel extends BorderPanel {
 
   private var _img: BufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
   // TODO scale from config

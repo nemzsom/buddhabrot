@@ -1,20 +1,25 @@
 package hu.nemzsom.buddhabrot
 
-import akka.actor.{Props, ActorSystem}
-import scala.swing.{MainFrame, SimpleSwingApplication}
-import java.util.concurrent.{LinkedBlockingQueue, LinkedBlockingDeque, ArrayBlockingQueue}
+import akka.actor.{Props, Actor}
 
-object Main extends SimpleSwingApplication {
+class Main(panel: Panel) extends Actor {
 
-  val config = Config.default
-  val panel = new MainPanel
-  val system = ActorSystem("Buddhabrot")
-  val display = system.actorOf(Props(new Display(panel)), "display")
-  val controller = system.actorOf(Props(new Controller(display)), "controller")
+  val display = context.actorOf(Props(new Display(panel)), "display")
 
-  def top = new MainFrame {
-    title = "Buddhabrot"
-    contents = panel
+  context.become(calculation(0))
+
+  def nextGrid(i: Int): Receive = {
+    if (i < grids.size) {
+      calculation(i)
+    }
+    else {
+      // TODO combine grids and save image
+    }
   }
 
+  def calculation(i: Int): Receive = {
+    case _ =>
+  }
+
+  override def receive = Actor.emptyBehavior
 }
