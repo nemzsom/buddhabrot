@@ -13,7 +13,7 @@ class ConfigSpec extends FlatSpec with Matchers {
 
   it should "throw exception if rgbWeights not sum to 1.0" in {
     intercept[IllegalArgumentException] {
-      Config(0, 0, 0.0, 1.0, 0.0, "", Scale.linear _,
+      Config(0, 0, 0.0, 1.0, 0.0, "", Scale.linear,
         Variation(
           0, 0, Color.WHITE,
           (0.5, 0.5, 0.5)

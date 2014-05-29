@@ -71,7 +71,7 @@ object Configs {
     imTo = 2.0,
     reFrom = -2.0,
     outDir = defOutDir,
-    Scale.linear _,
+    Scale.linear,
     Variation(
       maxIter = 200,
       sampleFactor = 100,

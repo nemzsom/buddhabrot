@@ -23,7 +23,7 @@ object MemoryMeasure extends App {
     val size = width * height
     val mem = after - before
     val memPer1000px = mem * 1000 / size
-    println(s"Memory for $width×$height pixels: ${(mem) / 1024} KB (${mem / 1024 / 1024} MB). $memPer1000px byte/1000px")
+    println(s"Memory for $width×$height pixels: ${mem / 1024} KB (${mem / 1024 / 1024} MB). $memPer1000px byte/1000px")
   }
 
   def measureGrid(width: Int, height: Int): Unit = {
@@ -33,7 +33,7 @@ object MemoryMeasure extends App {
     val size = width * height
     val mem = after - before
     val memPer1000point = mem * 1000 / size
-    println(s"Memory for $width×$height grid: ${(mem) / 1024} KB (${mem / 1024 / 1024} MB). $memPer1000point byte/1000point")
+    println(s"Memory for $width×$height grid: ${mem / 1024} KB (${mem / 1024 / 1024} MB). $memPer1000point byte/1000point")
   }
 
   def getMemoryInBytes: Long = {

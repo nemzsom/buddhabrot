@@ -18,7 +18,8 @@ object ImageBuilder {
     img
   }
 
-  def preview(grid: Grid, width: Int, height: Int): BufferedImage = {
+  def preview(grid: Grid, outerWidth: Int, outerHeight: Int): BufferedImage = {
+    val (width, height) = getTargetDimension(grid.width, grid.height, outerWidth, outerHeight)
     val img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val hScale = grid.width.toDouble / width
     val vScale = grid.height.toDouble / height
@@ -43,6 +44,21 @@ object ImageBuilder {
       )
     }
 
+  def getTargetDimension(sourceWidth: Int, sourceHeight: Int, outerWidth: Int, outerHeight: Int): (Int, Int) = {
+    val sourceScale = sourceWidth.toDouble / sourceHeight
+    val outerScale = outerWidth.toDouble / outerHeight
+    if (outerScale < sourceScale) {
+      val width = outerWidth
+      val height = (width / sourceScale).toInt
+      (width, height)
+    }
+    else {
+      val height = outerHeight
+      val width = (sourceScale * height).toInt
+      (width, height)
+    }
+  }
+
 
   implicit class BufferedImageOps(img: BufferedImage) {
 
@@ -52,6 +68,4 @@ object ImageBuilder {
         databuffer.getData
     }
   }
-
-
 }

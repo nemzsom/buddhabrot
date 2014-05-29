@@ -49,7 +49,30 @@ class ImageBuilderSpec extends FlatSpec with Matchers {
     rgbs map (_._1) shouldEqual List(0, 85)
   }
 
+  "getTargetDimension" should "calculate Dimensions correctly" in {
+    // width greater than height
+    {
+      val sourceWidth = 8
+      val sourceHeight = 4
+      getTargetDimension(sourceWidth, sourceHeight, 4, 2) shouldBe (4, 2)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 4) shouldBe (2, 1)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 2) shouldBe (2, 1)
+      getTargetDimension(sourceWidth, sourceHeight, 8, 2) shouldBe (4, 2)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 8) shouldBe (2, 1)
+    }
+    // height greater than width
+    {
+      val sourceWidth = 4
+      val sourceHeight = 8
+      getTargetDimension(sourceWidth, sourceHeight, 4, 2) shouldBe (1, 2)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 4) shouldBe (2, 4)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 2) shouldBe (1, 2)
+      getTargetDimension(sourceWidth, sourceHeight, 8, 2) shouldBe (1, 2)
+      getTargetDimension(sourceWidth, sourceHeight, 2, 8) shouldBe (2, 4)
+    }
+
+  }
+
   def getRgbs(pixels: Array[Int]): Array[(Int, Int, Int)] =
     pixels.map(n => (0xFF & n >> 16, 0xFF & n >> 8, 0xFF & n))
-
 }
