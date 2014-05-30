@@ -2,38 +2,58 @@ package hu.nemzsom.buddhabrot
 
 import java.awt.image.{DataBufferInt, BufferedImage}
 
+case class RGBScales(rScale: Int => Int, gScale: Int => Int, bScale: Int => Int)
+
 object ImageBuilder {
 
-  val scaler = Scale.linear(0, 255)_
-
-  def build(grid: Grid): BufferedImage = {
-    val img = new BufferedImage(grid.width, grid.height, BufferedImage.TYPE_INT_RGB)
+  def build(grids: Seq[(Grid, Instance)]): BufferedImage = {
+    val firstGrid = grids.head._1
+    val img = new BufferedImage(firstGrid.width, firstGrid.height, BufferedImage.TYPE_INT_RGB)
     val pixels = img.pixels
-    val (min, max) = minMax(grid)
-    val scale = scaler(min, max)
-    grid.zipWithIndex foreach { case (dense, i) =>
-      val n = scale(dense)
-      pixels(i) = n | n << 8 | n << 16
+    val buddhas = getBuddhas(grids)
+    pixels.indices foreach { i=>
+      pixels(i) = getPixel(i, buddhas)
     }
     img
   }
 
-  def preview(grid: Grid, outerWidth: Int, outerHeight: Int): BufferedImage = {
-    val (width, height) = getTargetDimension(grid.width, grid.height, outerWidth, outerHeight)
+  def preview(grids: Seq[(Grid, Instance)], outerWidth: Int, outerHeight: Int): BufferedImage = {
+    val firstGrid = grids.head._1
+    val (width, height) = getTargetDimension(firstGrid.width, firstGrid.height, outerWidth, outerHeight)
     val img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-    val hScale = grid.width.toDouble / width
-    val vScale = grid.height.toDouble / height
-    val (min, max) = minMax(grid)
-    val scale = scaler(min, max)
+    val hScale = firstGrid.width.toDouble / width
+    val vScale = firstGrid.height.toDouble / height
+    val buddhas = getBuddhas(grids)
     for {
       y <- 0 to height - 1
       x <- 0 to width - 1
     } {
-      val dense = grid.get((x * hScale).toInt, (y * vScale).toInt)
-      val n = scale(dense)
-      img.setRGB(x, y, n | n << 8 | n << 16)
+      val gridIndex = firstGrid.indexFor((x * hScale).toInt, (y * vScale).toInt)
+      getPixel(gridIndex, buddhas)
+      img.setRGB(x, y, getPixel(gridIndex, buddhas))
     }
     img
+  }
+
+  def getBuddhas(grids: Seq[(Grid, Instance)]): Seq[(Array[Int], RGBScales, (Double, Double, Double))] =
+    grids map { case (grid, instance) =>
+      val (_, max) = minMax(grid)
+      (
+        grid.data,
+        RGBScales(instance.rScaler(0, max), instance.gScaler(0, max), instance.bScaler(0, max)),
+        instance.rgbWeights
+        )
+    }
+
+  def getPixel(index: Int, buddhas: Seq[(Array[Int], RGBScales, (Double, Double, Double))]): Int ={
+    var r, g, b = 0.0
+    buddhas.foreach { case (data, RGBScales(rScale, gScale, bScale), (rWeight, gWeight, bWeight)) =>
+      val dense = data(index)
+      r = r + rScale(dense) * rWeight
+      g = g + gScale(dense) * gWeight
+      b = b + bScale(dense) * bWeight
+    }
+    r.round.toInt << 16 | g.round.toInt << 8 | b.round.toInt
   }
 
   def minMax(xs: Iterable[Int]): (Int, Int) =

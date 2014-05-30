@@ -22,7 +22,7 @@ class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends
 
   override def receive = {
     case Tracks(seq, sample, iter) =>
-      handleTracks(seq, sample, iter)
+      registerStats(sample, iter)
       if (stats.sampleCount >= instance.samples) {
         ticker.cancel()
         display ! UpdateSecMessage(s"Finishing image")
@@ -31,12 +31,13 @@ class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends
       else {
         sender ! calcCommand
       }
+      registerPoints(seq)
     case Tick =>
       val iteration = stats.tick()
       val percent = stats.sampleCount * 100.0 / instance.samples
       if (percent > nextPreview) {
         nextPreview = nextPreview + 5
-        display ! Preview(grid)
+        display ! Preview(Seq((grid, Instance(instance.maxIter, instance.samples, instance.color, (1.0, 1.0, 1.0), instance.scaler))))
       }
       display ! UpdateSecMessage(s"samples: ${"%.2f" format percent}% speed: ${iteration / 1000 / stats.ticksPerStat}K iteration/sec")
   }
@@ -50,15 +51,18 @@ class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends
 
   def waitForEnd(remained: Set[ActorRef]): Receive = {
     case Tracks(seq, sample, iter) =>
-      handleTracks(seq, sample, iter)
+      registerStats(sample, iter)
+      registerPoints(seq)
       context.become(finishing(remained - sender))
   }
 
-  def handleTracks(points: Seq[Complex], sample: Int, iter: Int): Unit = {
-    points foreach grid.register
+  def registerStats(sample: Int, iter: Int): Unit = {
     stats.sampleCount = stats.sampleCount + sample
     stats.iters(iter)
   }
+
+  def registerPoints(points: Seq[Complex]) =
+    points foreach grid.register
 
   def startCalcs(n: Int): Set[ActorRef] = {
     val calcs = (1 to n) map { i =>

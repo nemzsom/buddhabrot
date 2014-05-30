@@ -12,11 +12,11 @@ class Grid(val width: Int, val height: Int, val reFrom: Double, val reTo: Double
 
   override val size = width * height
 
-  private val data = new Array[Int](size)
+  val data = new Array[Int](size)
 
   override def iterator: Iterator[Int] = data.iterator
 
-  private def indexFor(x: Int, y: Int) = y * width + x
+  def indexFor(x: Int, y: Int) = y * width + x
 
   def get(x: Int, y: Int) = data(indexFor(x, y))
 

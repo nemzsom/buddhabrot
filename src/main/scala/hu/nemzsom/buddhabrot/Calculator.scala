@@ -3,7 +3,7 @@ package hu.nemzsom.buddhabrot
 import akka.actor.{ActorLogging, Actor}
 import scala.annotation.tailrec
 
-/** Receive: calculate point tracks for iterations */
+/** Receive: calculate tracks for iterations */
 case class Calculate(iterations: Int)
 
 /** Response: calculated tracks of complex points during the mandelbrot iteration.

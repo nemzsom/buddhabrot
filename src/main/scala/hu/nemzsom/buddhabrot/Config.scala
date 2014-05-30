@@ -57,7 +57,7 @@ object Configs {
     outDir = defOutDir,
     Scale.linear _,
     Variation(
-      maxIter = 200,
+      maxIter = 20000,
       sampleFactor = 100,
       color = new Color(255, 255, 255),
       rgbWeights = (1, 1, 1)
@@ -75,20 +75,51 @@ object Configs {
     Variation(
       maxIter = 200,
       sampleFactor = 100,
-      color = new Color(255, 0, 0),
-      rgbWeights = (1, 0, 0)
+      color = new Color(0, 0, 255),
+      rgbWeights = (0, 0, 1)
     ),
     Variation(
       maxIter = 2000,
-      sampleFactor = 100,
+      sampleFactor = 10,
       color = new Color(0, 255, 0),
       rgbWeights = (0, 1, 0)
     ),
     Variation(
       maxIter = 20000,
       sampleFactor = 100,
-      color = new Color(0, 0, 255),
-      rgbWeights = (0, 0, 1)
+      color = new Color(255, 0, 0),
+      rgbWeights = (1, 0, 0)
     )
   )
+
+  val combined = {
+    val weight = 1.0 / 3
+    Config(
+      width = 1000,
+      height = 1000,
+      imFrom = -2.0,
+      imTo = 2.0,
+      reFrom = -2.0,
+      outDir = defOutDir,
+      Scale.linear,
+      Variation(
+        maxIter = 200,
+        sampleFactor = 100,
+        color = new Color(255, 255, 255),
+        rgbWeights = (weight, weight, weight)
+      ),
+      Variation(
+        maxIter = 2000,
+        sampleFactor = 100,
+        color = new Color(255, 255, 255),
+        rgbWeights = (weight, weight, weight)
+      ),
+      Variation(
+        maxIter = 20000,
+        sampleFactor = 10,
+        color = new Color(255, 255, 255),
+        rgbWeights = (weight, weight, weight)
+      )
+    )
+  }
 }

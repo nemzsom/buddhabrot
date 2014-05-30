@@ -1,8 +1,8 @@
 package hu.nemzsom.buddhabrot
 
-import akka.actor.{PoisonPill, ActorRef, Props, Actor}
+import akka.actor._
 
-class Main(panel: Panel) extends Actor {
+class Main(panel: Panel) extends Actor with ActorLogging {
 
   import App.config
 
@@ -13,13 +13,15 @@ class Main(panel: Panel) extends Actor {
   def nextInstance(grids: List[Grid]): Receive = {
     val index = grids.size
     if (config.instances.size == index) {
-      // TODO combine grids and save image
-      /*display ! UpdateMessage("Saving image...")
-     val time = System.nanoTime
-     val img = ImageBuilder.build(grid)
-     log.debug(s"Image save time: ${"%.2f" format ((System.nanoTime() - time) / 1E6)} ms")
-     val savedImg = new ImageSaver(config.outDir).saveImage(img)
-     display ! UpdateMessage(s"Image saved to $savedImg.")*/
+      display ! UpdateMainMessage("")
+      display ! UpdateSecMessage("Building image...")
+      val time = System.nanoTime
+      val img = ImageBuilder.build(grids.reverse.zip(config.instances))
+      log.debug(s"Image build time: ${"%.2f" format ((System.nanoTime() - time) / 1E6)} ms")
+      display ! UpdateSecMessage("Saving image...")
+      val savedImg = new ImageSaver(config.outDir).saveImage(img)
+      display ! UpdateSecMessage(s"Image saved to $savedImg.")
+      context.stop(self)
       Actor.emptyBehavior
     }
     else {

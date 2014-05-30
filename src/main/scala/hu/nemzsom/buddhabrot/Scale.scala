@@ -14,5 +14,4 @@ object Scale {
       else result
     }
   }
-
 }

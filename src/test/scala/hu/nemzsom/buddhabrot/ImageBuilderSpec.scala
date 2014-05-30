@@ -4,7 +4,7 @@ import org.scalatest.{Matchers, FlatSpec}
 
 class ImageBuilderSpec extends FlatSpec with Matchers {
 
-  import ImageBuilder._
+  /*import ImageBuilder._
 
   // 2 | 2 | 4 | 2
   // 2 | 7 | 2 | 8
@@ -74,5 +74,5 @@ class ImageBuilderSpec extends FlatSpec with Matchers {
   }
 
   def getRgbs(pixels: Array[Int]): Array[(Int, Int, Int)] =
-    pixels.map(n => (0xFF & n >> 16, 0xFF & n >> 8, 0xFF & n))
+    pixels.map(n => (0xFF & n >> 16, 0xFF & n >> 8, 0xFF & n))*/
 }
