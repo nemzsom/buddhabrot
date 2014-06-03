@@ -1,12 +1,14 @@
 package hu.nemzsom.buddhabrot
 
 import akka.actor._
+import java.awt.image.BufferedImage
+import scala.swing.Label
 
-class Main(panel: Panel) extends Actor with ActorLogging {
+class Main(imgPanel: ImgPanel, instancePanel: InstancePanel, msgLabel: Label) extends Actor with ActorLogging {
 
   import App.config
 
-  val display = context.actorOf(Props(new Display(panel)), "display")
+  val display = context.actorOf(Props(new Display(imgPanel)), "display")
 
   override def receive = nextInstance(List())
 
@@ -16,10 +18,10 @@ class Main(panel: Panel) extends Actor with ActorLogging {
       display ! UpdateMainMessage("")
       display ! UpdateSecMessage("Building image...")
       val time = System.nanoTime
-      val img = ImageBuilder.build(grids.reverse.zip(config.instances))
+      val img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB) // TODO val img = ImageBuilder.build(grids.reverse.zip(config.instances))
       log.debug(s"Image build time: ${"%.2f" format ((System.nanoTime() - time) / 1E6)} ms")
       display ! UpdateSecMessage("Saving image...")
-      val savedImg = new ImageSaver(config.outDir).saveImage(img)
+      val savedImg = new ImageSaver(config.outRoot).saveImage(img)
       display ! UpdateSecMessage(s"Image saved to $savedImg.")
       context.stop(self)
       Actor.emptyBehavior

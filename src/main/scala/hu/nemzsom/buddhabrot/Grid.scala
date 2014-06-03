@@ -1,6 +1,6 @@
 package hu.nemzsom.buddhabrot
 
-class Grid(val width: Int, val height: Int, val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) extends Iterable[Int] {
+class Grid(val width: Int, val height: Int, val reFrom: Double, val reTo: Double, val imFrom: Double, val imTo: Double) extends Iterable[Int] with Serializable {
 
   require(width > 0)
   require(height > 0)
@@ -33,5 +33,32 @@ class Grid(val width: Int, val height: Int, val reFrom: Double, val reTo: Double
     val x = index(imFrom, imTo, c.im, imDelta)
     val y = index(reFrom, reTo, c.re, reDelta)
     if (x >= 0 && y >= 0) inc(x, y)
+  }
+
+  override def canEqual(other: Any): Boolean = other.isInstanceOf[Grid]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Grid =>
+      (that canEqual this) &&
+        reDelta == that.reDelta &&
+        imDelta == that.imDelta &&
+        size == that.size &&
+        data.sameElements(that.data) &&
+        width == that.width &&
+        height == that.height &&
+        reFrom == that.reFrom &&
+        reTo == that.reTo &&
+        imFrom == that.imFrom &&
+        imTo == that.imTo
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(reDelta, imDelta, size, data, width, height, reFrom, reTo, imFrom, imTo)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
+
+  override def toString(): String = {
+    s"grid[width: $width, height: $height, reFrom: $reFrom, reTo: $reTo, imFrom: $imFrom, imTo: $imTo]"
   }
 }

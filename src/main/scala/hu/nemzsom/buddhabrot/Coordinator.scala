@@ -22,7 +22,7 @@ class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends
 
   override def receive = {
     case Tracks(seq, sample, iter) =>
-      registerStats(sample, iter)
+      /*registerStats(sample, iter)
       if (stats.sampleCount >= instance.samples) {
         ticker.cancel()
         display ! UpdateSecMessage(s"Finishing image")
@@ -31,15 +31,15 @@ class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends
       else {
         sender ! calcCommand
       }
-      registerPoints(seq)
+      registerPoints(seq)*/
     case Tick =>
-      val iteration = stats.tick()
+      /*val iteration = stats.tick()
       val percent = stats.sampleCount * 100.0 / instance.samples
       if (percent > nextPreview) {
         nextPreview = nextPreview + 5
         display ! Preview(Seq((grid, Instance(instance.maxIter, instance.samples, instance.color, (1.0, 1.0, 1.0), instance.scaler))))
       }
-      display ! UpdateSecMessage(s"samples: ${"%.2f" format percent}% speed: ${iteration / 1000 / stats.ticksPerStat}K iteration/sec")
+      display ! UpdateSecMessage(s"samples: ${"%.2f" format percent}% speed: ${iteration / 1000 / stats.ticksPerStat}K iteration/sec")*/
   }
 
   def finishing(remained: Set[ActorRef]): Receive =

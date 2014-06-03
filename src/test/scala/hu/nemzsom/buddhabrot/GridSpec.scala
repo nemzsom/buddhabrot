@@ -1,6 +1,7 @@
 package hu.nemzsom.buddhabrot
 
 import org.scalatest.{Matchers, FlatSpec}
+import java.nio.file.Files
 
 class GridSpec extends FlatSpec with Matchers {
 
@@ -78,6 +79,15 @@ class GridSpec extends FlatSpec with Matchers {
       2, 0, 2,
       0, 3, 0
     )
+  }
+
+  it should "be serializable" in {
+    val grid = new Grid(10, 8, 0.0, 8.0, 0.0, 10.0)
+    grid.register(Complex(5.5, 4.5))
+    val path = Files.createTempFile("grid_", ".test")
+    FileUtil.write(grid, path)
+    FileUtil.read(path) shouldEqual grid
+    Files.delete(path)
   }
 
   def print(grid: Grid): Unit =

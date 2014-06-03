@@ -7,22 +7,20 @@ import java.awt.{Color, Graphics2D}
 import scala.swing.BorderPanel.Position
 import javax.swing.BorderFactory
 
-class Panel extends BorderPanel {
-
-  import App.config
+class ImgPanel(width: Int, height: Int) extends BorderPanel {
 
   private var _img: BufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 
-  preferredSize = ImageBuilder.getTargetDimension(config.width, config.height, 640, 640)
+  preferredSize = (width, height)
   focusable = true
   background = Color.BLACK
   
-  val mainMsg, secMsg = new Label("", EmptyIcon, Alignment.Left) {
+  val msg = new Label("", EmptyIcon, Alignment.Left) {
     border = BorderFactory.createEmptyBorder(0, 5, 2, 0)
   }
   val msgPanel = new GridPanel(2, 1) {
     opaque = false
-    contents ++= Seq(mainMsg, secMsg)
+    contents += msg
   }
 
   layout(msgPanel) = Position.South
@@ -30,11 +28,8 @@ class Panel extends BorderPanel {
   def updateImage(img: BufferedImage): Unit =
     _img = img
 
-  def updateSecondaryMessage(msgStr: String): Unit =
-    secMsg.text = msgStr
-  
-  def updateMainMessage(msgStr: String): Unit =
-    mainMsg.text = msgStr
+  def updateMessage(msgStr: String): Unit =
+    msg.text = msgStr
 
   override def paintComponent(g: Graphics2D) = {
     super.paintComponent(g)

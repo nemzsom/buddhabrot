@@ -7,17 +7,15 @@ case class Preview(grids: Seq[(Grid, Instance)])
 case class UpdateMainMessage(msg: String)
 case class UpdateSecMessage(msg: String)
 
-class Display(panel: Panel) extends Actor with ActorLogging {
+class Display(panel: ImgPanel) extends Actor with ActorLogging {
 
   override def receive = {
     case Preview(grids) =>
-      val panelSize: Dimension = panel.peer.getSize
+      /*val panelSize: Dimension = panel.peer.getSize
       val img = ImageBuilder.preview(grids, panelSize.width, panelSize.height)
       panel.updateImage(img)
-      panel.repaint()
+      panel.repaint()*/
     case UpdateMainMessage(msg) =>
-      panel.updateMainMessage(msg)
-    case UpdateSecMessage(msg) =>
-      panel.updateSecondaryMessage(msg)
+      panel.updateMessage(msg)
   }
 }

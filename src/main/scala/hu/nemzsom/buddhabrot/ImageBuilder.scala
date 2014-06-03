@@ -6,7 +6,7 @@ case class RGBScales(rScale: Int => Int, gScale: Int => Int, bScale: Int => Int)
 
 object ImageBuilder {
 
-  def build(grids: Seq[(Grid, Instance)]): BufferedImage = {
+  /*def build(grids: Seq[(Grid, Instance)]): BufferedImage = {
     val firstGrid = grids.head._1
     val img = new BufferedImage(firstGrid.width, firstGrid.height, BufferedImage.TYPE_INT_RGB)
     val pixels = img.pixels
@@ -62,30 +62,5 @@ object ImageBuilder {
         if (x < min) x else min,
         if (x > max) x else max
       )
-    }
-
-  def getTargetDimension(sourceWidth: Int, sourceHeight: Int, outerWidth: Int, outerHeight: Int): (Int, Int) = {
-    val sourceScale = sourceWidth.toDouble / sourceHeight
-    val outerScale = outerWidth.toDouble / outerHeight
-    if (outerScale < sourceScale) {
-      val width = outerWidth
-      val height = (width / sourceScale).toInt
-      (width, height)
-    }
-    else {
-      val height = outerHeight
-      val width = (sourceScale * height).toInt
-      (width, height)
-    }
-  }
-
-
-  implicit class BufferedImageOps(img: BufferedImage) {
-
-    def pixels: Array[Int] = {
-        val raster = img.getRaster
-        val databuffer: DataBufferInt = raster.getDataBuffer.asInstanceOf[DataBufferInt]
-        databuffer.getData
-    }
-  }
+    }*/
 }
