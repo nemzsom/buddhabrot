@@ -1,4 +1,4 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.util
 
 class Statistics(val ticksPerStat: Int) {
 

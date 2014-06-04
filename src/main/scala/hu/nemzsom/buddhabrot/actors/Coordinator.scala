@@ -1,7 +1,10 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.actors
 
 import akka.actor._
 import scala.concurrent.duration._
+import hu.nemzsom.buddhabrot._
+import hu.nemzsom.buddhabrot.Instance
+import hu.nemzsom.buddhabrot.util.Statistics
 
 case class Result(grid: Grid)
 case object Tick

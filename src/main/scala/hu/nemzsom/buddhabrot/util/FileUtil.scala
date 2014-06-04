@@ -1,4 +1,4 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.util
 
 import java.nio.file.{Files, Path}
 import java.io.{ObjectInputStream, ObjectOutputStream}

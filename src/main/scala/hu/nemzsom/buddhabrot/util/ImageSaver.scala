@@ -1,4 +1,4 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.util
 
 import java.io.File
 import java.text.SimpleDateFormat

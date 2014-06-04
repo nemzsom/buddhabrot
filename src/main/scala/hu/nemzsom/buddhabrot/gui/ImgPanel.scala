@@ -1,4 +1,4 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.gui
 
 import scala.swing.Swing._
 import scala.swing._

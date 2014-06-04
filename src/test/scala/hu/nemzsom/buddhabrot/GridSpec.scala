@@ -2,6 +2,7 @@ package hu.nemzsom.buddhabrot
 
 import org.scalatest.{Matchers, FlatSpec}
 import java.nio.file.Files
+import hu.nemzsom.buddhabrot.util.FileUtil
 
 class GridSpec extends FlatSpec with Matchers {
 

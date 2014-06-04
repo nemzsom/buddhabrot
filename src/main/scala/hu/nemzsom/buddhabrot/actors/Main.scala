@@ -1,8 +1,11 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.actors
 
 import akka.actor._
 import java.awt.image.BufferedImage
 import scala.swing.Label
+import hu.nemzsom.buddhabrot.gui.{ImgPanel, InstancePanel}
+import hu.nemzsom.buddhabrot.{Grid, App}
+import hu.nemzsom.buddhabrot.util.ImageSaver
 
 class Main(imgPanel: ImgPanel, instancePanel: InstancePanel, msgLabel: Label) extends Actor with ActorLogging {
 

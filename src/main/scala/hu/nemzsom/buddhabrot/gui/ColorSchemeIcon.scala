@@ -1,9 +1,10 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.gui
 
 import javax.swing.Icon
 import java.awt.{Color, Graphics, Component}
 import java.awt.image.BufferedImage
-import ImageUtil.BufferedImageOps
+import hu.nemzsom.buddhabrot.ColorScheme
+import hu.nemzsom.buddhabrot.util.ImageUtil.BufferedImageOps
 
 class ColorSchemeIcon(width: Int, height: Int) extends Icon {
 

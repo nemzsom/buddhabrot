@@ -1,6 +1,7 @@
 package hu.nemzsom.buddhabrot
 
 import org.scalatest.{FlatSpec, Matchers}
+import hu.nemzsom.buddhabrot.util.Statistics
 
 class StatisticsSpec extends FlatSpec with Matchers {
 

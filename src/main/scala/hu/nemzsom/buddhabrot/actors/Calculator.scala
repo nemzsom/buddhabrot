@@ -1,7 +1,8 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.actors
 
 import akka.actor.{ActorLogging, Actor}
 import scala.annotation.tailrec
+import hu.nemzsom.buddhabrot.{Complex, BuddhaCalc, App}
 
 /** Receive: calculate tracks for iterations */
 case class Calculate(iterations: Int)

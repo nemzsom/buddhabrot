@@ -1,17 +1,18 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.gui
 
 import scala.swing.FlowPanel
 import scala.swing.FlowPanel.Alignment
 import scala.swing.Swing._
-import App.config
 import java.awt.Color
-import ImageUtil.getTargetDimension
+import hu.nemzsom.buddhabrot.util.ImageUtil
+import ImageUtil._
+import hu.nemzsom.buddhabrot.App._
 
 class InstancePanel extends FlowPanel(Alignment.Left)() {
 
   val (w, h) = getTargetDimension(config.width, config.height, 200, 200)
 
-  preferredSize = (w + 10, h * config.instances.size)
+  preferredSize = (w + 25, h * config.instances.size)
   focusable = true
   background = Color.GRAY
 

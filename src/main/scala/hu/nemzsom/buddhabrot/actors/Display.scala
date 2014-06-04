@@ -1,7 +1,10 @@
-package hu.nemzsom.buddhabrot
+package hu.nemzsom.buddhabrot.actors
 
 import akka.actor.{ActorLogging, Actor}
 import java.awt.Dimension
+import hu.nemzsom.buddhabrot.gui.ImgPanel
+import hu.nemzsom.buddhabrot.Grid
+import hu.nemzsom.buddhabrot.Instance
 
 case class Preview(grids: Seq[(Grid, Instance)])
 case class UpdateMainMessage(msg: String)
