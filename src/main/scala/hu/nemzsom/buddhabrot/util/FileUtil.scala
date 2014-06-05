@@ -1,7 +1,7 @@
 package hu.nemzsom.buddhabrot.util
 
 import java.nio.file.{Files, Path}
-import java.io.{ObjectInputStream, ObjectOutputStream}
+import java.io.{ObjectInputStream, ObjectOutputStream, File}
 
 object FileUtil {
 
@@ -15,6 +15,9 @@ object FileUtil {
       in.readObject
     }
   }
+
+  def getSubDirs(dir: File): List[File] =
+    dir.listFiles.filter(_.isDirectory).toList
 
   def using[T <: {def close()}, R]
   (resource: T)

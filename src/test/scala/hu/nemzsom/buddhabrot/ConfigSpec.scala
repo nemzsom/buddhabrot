@@ -12,5 +12,5 @@ class ConfigSpec extends FlatSpec with Matchers {
   }
 
   def config(width: Int, height: Int, imFrom: Double, imTo: Double, reFrom: Double) =
-    Config(width, height, imFrom, imTo, reFrom, "")
+    new Config(width, height, imFrom, imTo, reFrom, "")
 }

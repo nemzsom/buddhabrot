@@ -16,7 +16,7 @@ object App extends SimpleSwingApplication {
 
   setSystemLookAndFeel()
 
-  val config = Configs.combined
+  val config = Config.deprecated
   val (imgWidth, imgHeight) = getTargetDimension(config.width, config.height, 640, 640)
   val imgPanel = new ImgPanel(imgWidth, imgHeight)
   val instancePanel = new InstancePanel
@@ -40,7 +40,7 @@ object App extends SimpleSwingApplication {
   def top = new MainFrame {
     title = "Buddhabrot generator"
     resizable = false
-    contents = new StartPanel({ conf =>
+    contents = new StartPanel(config.outRoot, { conf =>
       println("config selected")
       contents = mainGui
       resizable = true

@@ -45,6 +45,8 @@ class ColorScheme private (flags: Seq[ColorFlag]) {
 
 object ColorScheme {
 
+  val BLACK_TO_WHITE = ColorScheme(Color.BLACK, 0.0) add (Color.WHITE, 1.0)
+
   def apply(color: Color, loc: Double) = new ColorScheme(List(ColorFlag(color, loc)))
 }
 
