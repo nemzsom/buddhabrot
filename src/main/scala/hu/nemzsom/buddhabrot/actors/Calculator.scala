@@ -2,7 +2,7 @@ package hu.nemzsom.buddhabrot.actors
 
 import akka.actor.{ActorLogging, Actor}
 import scala.annotation.tailrec
-import hu.nemzsom.buddhabrot.{Complex, BuddhaCalc, App}
+import hu.nemzsom.buddhabrot.{Complex, BuddhaCalc}
 
 /** Receive: calculate tracks for iterations */
 case class Calculate(iterations: Int)
@@ -15,11 +15,9 @@ case class Calculate(iterations: Int)
   */
 case class Tracks(points: Seq[Complex], sample: Int, allIter: Int)
 
-class Calculator(maxIter: Int) extends Actor with ActorLogging {
+class Calculator(maxIter: Int, reFrom: Double, reTo: Double, imFrom: Double, imTo: Double) extends Actor with ActorLogging {
 
-  import App.config
-
-  val calc = new BuddhaCalc(config.reFrom, config.reTo, config.imFrom, config.imTo)
+  val calc = new BuddhaCalc(reFrom, reTo, imFrom, imTo)
 
   override def receive = {
     case Calculate(iterations) =>

@@ -9,12 +9,11 @@ import hu.nemzsom.buddhabrot.util.Statistics
 case class Result(grid: Grid)
 case object Tick
 
-class Coordinator(main: ActorRef, display: ActorRef, instance: Instance) extends Actor with ActorLogging {
+class Coordinator(conf: Config, main: ActorRef, display: ActorRef, instance: Instance) extends Actor with ActorLogging {
 
-  import App.config
   val calcCommand = Calculate(100000)
 
-  val grid = new Grid(config.width, config.height, config.reFrom, config.reTo, config.imFrom, config.imTo)
+  val grid = new Grid(conf.width, conf.height, conf.reFrom, conf.reTo, conf.imFrom, conf.imTo)
   val stats = new Statistics(20)
 
   val calcs = startCalcs(Runtime.getRuntime.availableProcessors())
