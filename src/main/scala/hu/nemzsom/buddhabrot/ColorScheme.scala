@@ -3,7 +3,7 @@ package hu.nemzsom.buddhabrot
 import java.awt.Color
 import scala.annotation.tailrec
 
-class ColorScheme private (flags: Seq[ColorFlag]) {
+class ColorScheme (val flags: Seq[ColorFlag]) {
 
   require(flags.size > 0)
   val first = flags.head
