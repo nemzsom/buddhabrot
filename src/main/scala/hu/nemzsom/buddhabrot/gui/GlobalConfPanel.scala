@@ -14,7 +14,7 @@ class GlobalConfPanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
   val individualColor = radioButton("individual", 22)
   val globalColor = radioButton("global", 22)
   val colorGroup = new ButtonGroup(individualColor, globalColor)
-  val globalColorSchemeChooser = new ColorSchemeChooser(200, 20, Alignment.Left, conf.globalColorScheme)
+  val globalColorSchemeChooser = new ColorSchemeIndicator(200, 20, Alignment.Left, conf.globalColorScheme)
   colorGroup.select(conf.coloring match {
     case Coloring.Individual => individualColor
     case Coloring.Global => globalColor

@@ -52,5 +52,6 @@ object App extends SimpleSwingApplication {
   def setSystemLookAndFeel() {
     import javax.swing.UIManager
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
+    UIManager.put("Slider.paintValue", false)
   }
 }
