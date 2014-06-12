@@ -15,27 +15,41 @@ import java.util.UUID
 
 class ColorSchemeIndicator(width: Int, height: Int,  align: Alignment.Value, initialScheme: ColorScheme) extends Label("", EmptyIcon, align) {
 
-  val scheme = initialScheme
+  var scheme = initialScheme
 
   icon = new ColorSchemeIcon(width, height, scheme)
   border = BorderFactory.createLineBorder(Color.BLACK)
   listenTo(mouse.clicks)
 
+  var chooser: Option[ColorSchemeChooser] = None
+
   reactions += {
-    case e: MouseClicked =>
-      val chooser = new ColorSchemeChooser(scheme)
-      chooser.setLocationRelativeTo(this)
-      chooser.open()
-      listenTo(chooser)
-    case e: WindowDeactivated =>
+    case e: MouseClicked => chooser match {
+      case None =>
+        val ch = new ColorSchemeChooser(scheme) {
+          title = "Choose a color"
+        }
+        chooser = Some(ch)
+        ch.setLocationRelativeTo(this)
+        ch.open()
+        listenTo(ch)
+      case Some(ch) =>
+        ch.open()
+    }
+    case e: WindowClosed =>
       deafTo(e.source)
+      chooser = None
+    case SchemeChanged(ch) =>
+      scheme = ch.scheme
+      icon.asInstanceOf[ColorSchemeIcon].scheme = scheme
+      repaint()
+      publish(new ValueChanged(this))
   }
 }
 
 class ColorSchemeChooser(initialScheme: ColorScheme) extends Dialog {
 
   resizable = false
-  modal = true
 
   var _scheme = initialScheme
   def scheme = _scheme
@@ -97,9 +111,11 @@ class ColorSchemeChooser(initialScheme: ColorScheme) extends Dialog {
       }
       listenTo(newPanel)
       pack()
+      publish(SchemeChanged(this))
     case FlagChanged(panel) =>
       scheme = scheme.updated(panel.flagId, panel.color, panel.loc)
       schemeLabel.repaint()
+      publish(SchemeChanged(this))
     case FlagRemoved(panel) =>
       scheme = scheme.remove(panel.flagId)
       flagHolder.contents -= panel
@@ -108,8 +124,15 @@ class ColorSchemeChooser(initialScheme: ColorScheme) extends Dialog {
         flagHolder.contents.head.asInstanceOf[ColorFlagPanel].removeBtn.enabled = false
       }
       pack()
+      publish(SchemeChanged(this))
+  }
+
+  override def closeOperation(): Unit = {
+    publish(new WindowClosed(this))
   }
 }
+
+case class SchemeChanged(override val source: ColorSchemeChooser) extends UIEvent
 
 class ColorIndicator(_color: Color) extends Label {
 
@@ -130,7 +153,6 @@ class ColorIndicator(_color: Color) extends Label {
           publish(new ValueChanged(this))
         case None =>
       }
-    case e => println(e)
   }
 
 }
@@ -220,8 +242,15 @@ object ColorChooserTester extends SimpleSwingApplication {
 
   override def top = new MainFrame {
     title = "ColorChooserTester"
-    contents = new ColorSchemeIndicator(200, 20, Alignment.Center, ColorScheme.BLACK_TO_WHITE)
+    val indicator = new ColorSchemeIndicator(200, 20, Alignment.Center, ColorScheme.BLACK_TO_WHITE)
+    contents = indicator
+    listenTo(indicator)
     centerOnScreen()
+
+    reactions += {
+      case e: ValueChanged =>
+        println(s"value changed: ${indicator.scheme}")
+    }
   }
 
   def setSystemLookAndFeel() {

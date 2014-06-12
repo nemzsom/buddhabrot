@@ -41,10 +41,7 @@ object App extends SimpleSwingApplication {
     new BorderPanel {
       layout(topPanel) = North
       layout(imgPanel) = Center
-      layout(new ScrollPane(instancePanel){
-        horizontalScrollBarPolicy = BarPolicy.Never
-        verticalScrollBar.unitIncrement = 16
-      }) = West
+      layout(instancePanel) = West
       layout(msgLabel) = South
     }
   }

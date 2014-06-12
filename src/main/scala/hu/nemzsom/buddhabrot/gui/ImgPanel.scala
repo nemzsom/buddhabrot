@@ -12,6 +12,9 @@ class ImgPanel(width: Int, height: Int) extends BorderPanel {
   private var _img: BufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 
   preferredSize = (width, height)
+  maximumSize = (width, height)
+  minimumSize = (width, height)
+
   focusable = true
   background = Color.BLACK
   
