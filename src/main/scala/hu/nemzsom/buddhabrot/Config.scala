@@ -1,6 +1,7 @@
 package hu.nemzsom.buddhabrot
 
 import java.nio.file.Path
+import java.util.UUID
 import hu.nemzsom.buddhabrot.util.FileUtil
 
 class Config(val width: Int, val height: Int, val imFrom: Double, val imTo: Double, val reFrom: Double,
@@ -29,7 +30,7 @@ class Config(val width: Int, val height: Int, val imFrom: Double, val imTo: Doub
     else height compareTo that.height
 }
 
-case class Instance(maxIter: Int, sampleFactor: Int) extends Ordered[Instance]{
+case class Instance(maxIter: Int, sampleFactor: Int, id: UUID) extends Ordered[Instance]{
 
   val fileName = s"maxIter[$maxIter]_sampleFactor[$sampleFactor]"
   val gridFilename = fileName + ".grid"

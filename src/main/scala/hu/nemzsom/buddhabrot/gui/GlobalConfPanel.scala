@@ -1,10 +1,12 @@
 package hu.nemzsom.buddhabrot.gui
 
+import hu.nemzsom.buddhabrot.Coloring.Coloring
+
 import scala.swing._
 import scala.swing.Swing._
 import hu.nemzsom.buddhabrot.{Coloring, ColorMixing, Config}
 import javax.swing.BorderFactory
-import scala.swing.event.ButtonClicked
+import scala.swing.event.{Event, ButtonClicked}
 
 class GlobalConfPanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
 
@@ -29,8 +31,10 @@ class GlobalConfPanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
   listenTo(individualColor, globalColor)
 
   reactions += {
-    case ButtonClicked(b) if b == individualColor => globalColorSchemeChooser.visible = false
-    case ButtonClicked(b) if b == globalColor => globalColorSchemeChooser.visible = true
+    case ButtonClicked(b) =>
+      globalColorSchemeChooser.visible = globalColor.selected
+      conf.coloring = if (globalColor.selected) Coloring.Global else Coloring.Individual
+      publish(ColoringChanged(conf.coloring))
   }
 
   // color mixing
@@ -65,6 +69,6 @@ class GlobalConfPanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
   def label(name: String,  height: Int) = new Label(s"$name:", EmptyIcon, Alignment.Left) {
     preferredSize = (100, height)
   }
-
-
 }
+
+case class ColoringChanged(coloring: Coloring) extends Event

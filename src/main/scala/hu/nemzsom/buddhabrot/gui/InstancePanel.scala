@@ -1,6 +1,8 @@
 package hu.nemzsom.buddhabrot.gui
 
-import java.awt.Color
+import java.awt.{Graphics, Color}
+import java.util.UUID
+import javax.swing.border.BevelBorder
 import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing.BorderPanel.Position._
@@ -10,7 +12,7 @@ import scala.swing._
 import scala.swing.Swing._
 import hu.nemzsom.buddhabrot.util.ImageUtil
 import ImageUtil._
-import hu.nemzsom.buddhabrot.{Config, Instance}
+import hu.nemzsom.buddhabrot.{ColorScheme, Config, Instance}
 
 class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
 
@@ -25,27 +27,36 @@ class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
     icon = new ImageIcon(getClass.getResource("add.png"))
     tooltip = "Add new instance"
   }
-  
+
   listenTo(addBtn)
 
-  val images = new BoxPanel(Orientation.Vertical) {
+  val thumbs = new BoxPanel(Orientation.Vertical) {
 
-    def newImage(): Unit = {
+    var ts = List.empty[InstanceThumb]
+
+    def newThumb(): Unit = {
+      val thumb = new InstanceThumb(w, h, ColorScheme.BLACK_TO_WHITE)
       contents += VStrut(10)
-      contents += new ImgPanel(w, h)
-      preferredSize = (w, h * conf.instances.size)
+      contents += thumb
+      ts = thumb :: ts
+      preferredSize = (w + 6, (h + 30) * conf.instances.size)
       peer.updateUI()
     }
   }
+
   conf.instances foreach { _ =>
-    images.newImage
+    thumbs.newThumb()
   }
+
+  // TODO remove
+  thumbs.newThumb()
+  thumbs.newThumb()
 
   contents += new BoxPanel(Orientation.Horizontal) {
     contents += addBtn
     contents += HGlue
   }
-  contents += new ScrollPane(images){
+  contents += new ScrollPane(thumbs) {
     horizontalScrollBarPolicy = BarPolicy.Never
     verticalScrollBarPolicy = BarPolicy.Always
     verticalScrollBar.unitIncrement = 16
@@ -55,11 +66,53 @@ class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
     case ButtonClicked(b) if b == addBtn =>
       val dialog = new InstanceDialog("Add Instance", instance => {
         conf.addInstance(instance)
-        println(s"added new instance ${conf.instances}")
-        images.newImage()
+        thumbs.newThumb()
       })
       dialog.centerOnScreen()
       dialog.open()
+  }
+
+  def setColors(show: Boolean) = {
+    thumbs.ts foreach { th =>
+      th.colorSchemeIndicator.visible = show
+    }
+  }
+}
+
+class InstanceThumb(imgWidth: Int, imgHeight: Int, initialScheme: ColorScheme) extends FlowPanel {
+  
+  val enabledChBox = new CheckBox
+  enabledChBox.selected = true
+  val colorSchemeIndicator = new ColorSchemeIndicator(imgWidth / 2, 20, Alignment.Right, initialScheme)
+  val imgPanel = new ImgPanel(imgWidth, imgHeight)
+  border = BorderFactory.createEtchedBorder()
+  preferredSize = (imgWidth, imgHeight + 24)
+  minimumSize = (imgWidth, imgHeight + 24)
+  maximumSize = (imgWidth, imgHeight + 24)
+  
+  contents += new BoxPanel(Orientation.Horizontal) {
+    preferredSize = (imgWidth, 20)
+    contents += enabledChBox
+    contents += HGlue
+    contents += colorSchemeIndicator
+    contents += HStrut(6)
+  }
+
+  contents += imgPanel
+  listenTo(enabledChBox, colorSchemeIndicator)
+
+  reactions += {
+    case ButtonClicked(b) if b == enabledChBox =>
+      repaint()
+  }
+
+  override def paint(g: Graphics2D) {
+    super.paint(g)
+    if (!enabledChBox.selected) {
+      g.setColor(new Color(0.5f, 0.5f, 0.5f, 0.9f))
+      g.fillRect(0, 0, size.width, size.height)
+    }
+
   }
 }
 
@@ -116,7 +169,7 @@ class InstanceDialog(_title: String, onInstance: Instance => Unit) extends Dialo
       try {
         val maxIter = maxIterField.asInt
         val sFactor = sFactorField.asInt
-        onInstance(Instance(maxIter, sFactor))
+        onInstance(Instance(maxIter, sFactor, UUID.randomUUID))
         close()
       } catch {
         case e: InvalidInputException =>
