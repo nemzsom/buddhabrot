@@ -34,8 +34,8 @@ class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
 
     var ts = List.empty[InstanceThumb]
 
-    def newThumb(): Unit = {
-      val thumb = new InstanceThumb(w, h, ColorScheme.BLACK_TO_WHITE)
+    def newThumb(instance: Instance): Unit = {
+      val thumb = new InstanceThumb(w, h, instance.colorScheme)
       contents += VStrut(10)
       contents += thumb
       ts = thumb :: ts
@@ -44,13 +44,9 @@ class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
     }
   }
 
-  conf.instances foreach { _ =>
-    thumbs.newThumb()
+  conf.instances foreach { instance =>
+    thumbs.newThumb(instance)
   }
-
-  // TODO remove
-  thumbs.newThumb()
-  thumbs.newThumb()
 
   contents += new BoxPanel(Orientation.Horizontal) {
     contents += addBtn
@@ -66,7 +62,7 @@ class InstancePanel(conf: Config) extends BoxPanel(Orientation.Vertical) {
     case ButtonClicked(b) if b == addBtn =>
       val dialog = new InstanceDialog("Add Instance", instance => {
         conf.addInstance(instance)
-        thumbs.newThumb()
+        thumbs.newThumb(instance)
       })
       dialog.centerOnScreen()
       dialog.open()

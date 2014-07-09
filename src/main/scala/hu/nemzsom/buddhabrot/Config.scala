@@ -4,7 +4,7 @@ import java.nio.file.Path
 import java.util.UUID
 import hu.nemzsom.buddhabrot.util.FileUtil
 
-class Config(val width: Int, val height: Int, val imFrom: Double, val imTo: Double, val reFrom: Double,
+class Config(val name: String, val width: Int, val height: Int, val imFrom: Double, val imTo: Double, val reFrom: Double,
                   val outRoot: String) extends Ordered[Config] {
 
   val reTo = (imTo - imFrom) * height / width + reFrom
@@ -22,6 +22,10 @@ class Config(val width: Int, val height: Int, val imFrom: Double, val imTo: Doub
     _instances = (i :: _instances).sorted
   }
 
+  def removeInstance(i: Instance) = {
+    _instances = _instances.filterNot(_.id == i.id)
+  }
+
   override def toString: String =
     s"Config[width: $width, height: $height, reFrom: $reFrom, reTo: $reTo, imFrom: $imFrom, imTo: $imTo]"
 
@@ -35,6 +39,8 @@ case class Instance(maxIter: Int, sampleFactor: Int, id: UUID) extends Ordered[I
   val fileName = s"maxIter[$maxIter]_sampleFactor[$sampleFactor]"
   val gridFilename = fileName + ".grid"
   val stateFilename = fileName + ".state"
+
+  var colorScheme = ColorScheme.BLACK_TO_WHITE
 
   override def compare(that: Instance): Int =
     if (maxIter != that.maxIter) maxIter compareTo that.maxIter
@@ -78,13 +84,14 @@ object Config {
     }
 
   def extractRange(dirName: String, rangeName: String): (Double, Double) =
-    (rangeName + """\[([^\s]*)\s-\s([^\s]*)\]""").r findFirstMatchIn  dirName match {
+    (rangeName + """\[([^\s]*)\s-\s([^\s]*)\]""").r findFirstMatchIn dirName match {
       case Some(m) =>
         (m.group(1).toDouble, m.group(2).toDouble)
       case None => throw new InvalidConfigException(s"Invalid directory name '$dirName': $rangeName range not found.")
     }
 
   val deprecated = new Config(
+    name = deprecated,
     width = 1000,
     height = 1000,
     imFrom = -2.0,
